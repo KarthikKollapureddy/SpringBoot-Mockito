@@ -5,6 +5,7 @@ import com.luv2code.component.dao.ApplicationDao;
 import com.luv2code.component.models.CollegeStudent;
 import com.luv2code.component.models.StudentGrades;
 import com.luv2code.component.service.ApplicationService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +14,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationContext;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = MvcTestingExampleApplication.class)
 public class MockitoAnnotationTest {
     @Autowired
     ApplicationContext context;
     @Autowired
-    CollegeStudent StudentOne;
+    CollegeStudent studentOne;
     @Autowired
     StudentGrades studentGrades;
 
@@ -29,6 +30,13 @@ public class MockitoAnnotationTest {
     @Autowired
     ApplicationService applicationService;
 
+    @BeforeEach
+    void setup(){
+        studentOne.setFirstname("John");
+        studentOne.setLastname("Rick");
+        studentOne.setEmailAddress("johnRick@yahoo.in");
+        studentOne.setStudentGrades(studentGrades);
+    }
     @DisplayName("When and Then")
     @Test
     void test_When_And_Then(){
@@ -40,6 +48,18 @@ public class MockitoAnnotationTest {
 //        2. Execution
         assertEquals(100.00,applicationService.
                 addGradeResultsForSingleClass(studentGrades.getMathGradeResults()));
+    }
+    @DisplayName("Test findGradePointAverage")
+    @Test
+    void test_findGradePointAverage(){
+        when(applicationDao.findGradePointAverage(studentGrades.getMathGradeResults()))
+                .thenReturn(75.00d);
+        assertEquals(75.00,applicationService.findGradePointAverage(
+                studentGrades.getMathGradeResults()
+        ));
+        verify(applicationDao).findGradePointAverage(studentOne.getStudentGrades().getMathGradeResults());
+        verify(applicationDao, times(1)).findGradePointAverage(studentGrades.getMathGradeResults());
+
     }
 
 }
