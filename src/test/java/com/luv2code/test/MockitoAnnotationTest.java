@@ -7,10 +7,9 @@ import com.luv2code.component.models.StudentGrades;
 import com.luv2code.component.service.ApplicationService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationContext;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,15 +24,9 @@ public class MockitoAnnotationTest {
     @Autowired
     StudentGrades studentGrades;
 
-    @Mock // creates a double of actual class
+    @MockBean // mockBean can be used to directly injectBeans using Autowired
     ApplicationDao applicationDao;
-    /*
-            InjectMocks injects the classes annotated with @Mock or @spy
-            Here in ApplicationService.class, we are autowiring ApplicationDao.class
-            So instead of calling the actual applicationDao.class it will call the
-            Mocked class which we have created using @Mock
-    */
-    @InjectMocks
+    @Autowired
     ApplicationService applicationService;
 
     @DisplayName("When and Then")
