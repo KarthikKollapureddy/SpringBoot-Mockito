@@ -13,8 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationContext;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = MvcTestingExampleApplication.class)
@@ -68,5 +67,28 @@ public class MockitoAnnotationTest {
         when(applicationDao.checkNull(studentOne)).thenReturn(studentOne);
         assertNotNull(applicationService.checkNull(studentOne));
     }
+    @DisplayName("Exception using mockito")
+    @Test
+    void test_RuntimeExceptionForCheckNull(){
+        CollegeStudent student = (CollegeStudent) context.getBean("collegeStudent");
+        doThrow(new RuntimeException()).when(
+                applicationDao).checkNull(student);
+        assertThrows(RuntimeException.class,
+                ()->{
+            applicationService.checkNull(student);
+                });
+        verify(applicationDao,times(1)).checkNull(student);
+    }
+    @DisplayName("Multiple Stubbing")
+    @Test
+    void test_MultipleStubbing(){
+        CollegeStudent student = (CollegeStudent) context.getBean("collegeStudent");
+        when(applicationDao.checkNull(student))
+                .thenThrow(new RuntimeException())
+                .thenReturn("Student obj is Null");
 
+        assertThrows(RuntimeException.class,()->applicationService.checkNull(student));
+        assertEquals("Student obj is Null",applicationService.checkNull(student));
+        verify(applicationDao,times(2)).checkNull(student);
+    }
 }
