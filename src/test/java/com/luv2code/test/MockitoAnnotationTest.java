@@ -91,4 +91,5 @@ public class MockitoAnnotationTest {
         assertEquals("Student obj is Null",applicationService.checkNull(student));
         verify(applicationDao,times(2)).checkNull(student);
     }
+
 }
