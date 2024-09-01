@@ -1,6 +1,7 @@
 package com.luv2code.component.models;
 
 public class CollegeStudent implements Student {
+    private int id; // a private field with no setter or getter
     private String firstname;
     private String lastname;
     private String emailAddress;
@@ -65,5 +66,9 @@ public class CollegeStudent implements Student {
     @Override
     public String getFullName() {
         return getFirstname() + " " + getLastname();
+    }
+
+    private String getNameAndId(){
+        return id+" "+getFullName();
     }
 }
